@@ -1,19 +1,6 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = -I .autoconf/m4
 
-GIT_REVISION = $(shell git describe --abbrev=6 --dirty --always --tags)
-
-# UNAME := $(shell uname)
-# ifeq ($(UNAME), Darwin)
-#  LIBS += -lfst -lm -ldl 
-#  CXX += -std=c++0x -Wall -Wno-sign-compare -Wno-unused-local-typedefs
-# endif
-
-# ifeq ($(UNAME), Linux)
-# LIBS=-lfst -ldl -lm -lrt -fopenmp
-# CXXFLAGS = -std=c++0x -Wall -Wno-sign-compare -Wno-unused-local-typedefs
-# endif
-
 bin_SCRIPTS =                      \
 	bin/phonetisaurus-apply    \
 	bin/phonetisaurus-train
