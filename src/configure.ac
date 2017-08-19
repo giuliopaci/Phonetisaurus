@@ -9,6 +9,22 @@ AC_CONFIG_SRCDIR(configure.ac)
 AM_INIT_AUTOMAKE([foreign -Wall])
 AM_MAINTAINER_MODE
 
+AM_PROG_AR
+LT_INIT
+
+AM_PATH_PYTHON([2.7],, [:])
+AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != :])
+AC_SUBST([PYTHON])
+if test "$PYTHON" != ":"; then
+   PYTHON_CPPFLAGS=
+   PYTHON_LIBS=
+   AX_PYTHON_DEVEL([>= '$PYTHON_VERSION'])
+fi
+AM_CONDITIONAL([HAVE_PYTHON_DEV], [test x"$PYTHON" != x && test "$PYTHON" != :])
+AC_SUBST([PYTHON_CPPFLAGS])
+AC_SUBST([PYTHON_LIBS])
+
+
 AC_LANG(C++)
 # Checks for programs.
 AC_PROG_CXX
@@ -19,7 +35,6 @@ AC_PROG_CC
 AC_PROG_CPP
 #AC_PROG_INSTALL
 AC_PROG_LN_S
-AC_PROG_RANLIB
 
 # Checks for libraries.
 AC_CHECK_LIB([c], [getgid],[AC_DEFINE([HAVE_GETGID],[1],[libc includes getgid])])
