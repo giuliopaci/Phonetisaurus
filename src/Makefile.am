@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS = subdir-objects
-
+ACLOCAL_AMFLAGS = -I .autoconf/m4
 
 GIT_REVISION = $(shell git describe --abbrev=6 --dirty --always --tags)
 
@@ -50,3 +50,19 @@ endif
 rnnlm_SOURCES = bin/rnnlm.cc 3rdparty/rnnlm/rnnlmlib.cpp 3rdparty/rnnlm/rnnlmlib.h
 rnnlm_CXXFLAGS = $(OPENFST_CXXFLAGS) -I$(top_srcdir)/3rdparty/rnnlm -funroll-loops -ffast-math
 rnnlm_LDADD = $(OPENFST_LDFLAGS)
+
+if HAVE_PYTHON
+
+Phonetisaurus-binding.cc: phonetisaurus-module.py
+	$(PYTHON) -B $(top_srcdir)/phonetisaurus-module.py > Phonetisaurus-binding.cc
+
+CLEANFILES = Phonetisaurus-binding.cc
+
+if HAVE_PYTHON_DEV
+pyexec_LTLIBRARIES = Phonetisaurus.la
+nodist_Phonetisaurus_la_SOURCES = Phonetisaurus-binding.cc lib/util.cc include/util.h
+Phonetisaurus_la_CXXFLAGS = $(OPENFST_CXXFLAGS) $(PYTHON_CPPFLAGS) -funroll-loops -ffast-math
+Phonetisaurus_la_LIBADD = $(OPENFST_LDFLAGS) $(PYTHON_LIBS)
+Phonetisaurus_la_LDFLAGS = -avoid-version -module
+endif
+endif
