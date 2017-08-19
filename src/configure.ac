@@ -6,6 +6,9 @@ AC_CONFIG_MACRO_DIR([.autoconf/m4])
 AC_CONFIG_AUX_DIR([.autoconf])
 AC_CONFIG_SRCDIR(configure.ac)
 
+GIT_REVISION=`git describe --abbrev=6 --dirty --always --tags 2>/dev/null || echo package`
+AC_SUBST([GIT_REVISION])
+
 AM_INIT_AUTOMAKE([foreign -Wall])
 AM_MAINTAINER_MODE
 
