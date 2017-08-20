@@ -106,3 +106,12 @@ Phonetisaurus_la_LIBADD = $(OPENFST_LDFLAGS) $(PYTHON_LIBS)
 Phonetisaurus_la_LDFLAGS = -avoid-version -module
 endif
 endif
+
+all-local:
+	cd "$(srcdir)"/python; $(PYTHON) setup.py build --build-base $(abs_builddir)/python/build --verbose
+
+install-exec-local:
+	$(PYTHON) "$(srcdir)"/python/setup.py install --prefix "$(DESTDIR)$(prefix)" --single-version-externally-managed --record "$(DESTDIR)$(pkgpythondir)"install_files.txt --verbose
+
+uninstall-local:
+	"$(DESTDIR)$(pkgpythondir)"install_files.txt | xargs rm -f
