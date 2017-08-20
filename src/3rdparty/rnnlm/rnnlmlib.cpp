@@ -148,7 +148,14 @@ int CRnnLM::addWordToVocab(char *word)
 
     if (vocab_size+2>=vocab_max_size) {        //reallocate memory if needed
         vocab_max_size+=100;
-        vocab=(struct vocab_word *)realloc(vocab, vocab_max_size * sizeof(struct vocab_word));
+	struct vocab_word *tmp = NULL;
+        tmp=(struct vocab_word *)realloc(vocab, vocab_max_size * sizeof(struct vocab_word));
+	if(tmp != NULL) {
+	    vocab = tmp;
+	} else {
+	    printf("Memory allocation failed\n");
+	    exit(1);
+	}
     }
     
     hash=getWordHash(word);
