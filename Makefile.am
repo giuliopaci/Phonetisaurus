@@ -2,8 +2,8 @@ AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = -I .autoconf/m4
 
 bin_SCRIPTS =                      \
-	bin/phonetisaurus-apply    \
-	bin/phonetisaurus-train
+	src/bin/phonetisaurus-apply    \
+	src/bin/phonetisaurus-train
 
 bin_PROGRAMS =                     \
 	phonetisaurus-align	   \
@@ -12,43 +12,43 @@ bin_PROGRAMS =                     \
 	phonetisaurus-g2prnn       \
 	rnnlm
 
-AM_CPPFLAGS = -I$(top_srcdir) -DGIT_REVISION=\"$(GIT_REVISION)\" -std=c++0x -Wall -Wno-sign-compare -Wno-unused-local-typedefs
+AM_CPPFLAGS = -I$(top_srcdir)/src -DGIT_REVISION=\"$(GIT_REVISION)\" -std=c++0x -Wall -Wno-sign-compare -Wno-unused-local-typedefs
 
-phonetisaurus_align_SOURCES = bin/phonetisaurus-align.cc include/PhonetisaurusRex.h lib/util.cc include/util.h lib/LatticePruner.cc include/LatticePruner.h lib/M2MFstAligner.cc include/M2MFstAligner.h
-phonetisaurus_align_CXXFLAGS = $(OPENFST_CXXFLAGS) -I$(top_srcdir)/3rdparty/utfcpp
+phonetisaurus_align_SOURCES = src/bin/phonetisaurus-align.cc src/include/PhonetisaurusRex.h src/lib/util.cc src/include/util.h src/lib/LatticePruner.cc src/include/LatticePruner.h src/lib/M2MFstAligner.cc src/include/M2MFstAligner.h
+phonetisaurus_align_CXXFLAGS = $(OPENFST_CXXFLAGS) -I$(top_srcdir)/src/3rdparty/utfcpp
 phonetisaurus_align_LDADD = $(OPENFST_LDFLAGS)
 
-phonetisaurus_arpa2wfst_SOURCES = bin/phonetisaurus-arpa2wfst.cc include/ARPA2WFST.h lib/util.cc include/util.h
-phonetisaurus_arpa2wfst_CXXFLAGS = $(OPENFST_CXXFLAGS) -I$(top_srcdir)/3rdparty/utfcpp
+phonetisaurus_arpa2wfst_SOURCES = src/bin/phonetisaurus-arpa2wfst.cc src/include/ARPA2WFST.h src/lib/util.cc src/include/util.h
+phonetisaurus_arpa2wfst_CXXFLAGS = $(OPENFST_CXXFLAGS) -I$(top_srcdir)/src/3rdparty/utfcpp
 phonetisaurus_arpa2wfst_LDADD = $(OPENFST_LDFLAGS)
 
-phonetisaurus_g2pfst_SOURCES = bin/phonetisaurus-g2pfst.cc include/PhonetisaurusScript.h include/PhonetisaurusRex.h lib/util.cc include/util.h
-phonetisaurus_g2pfst_CXXFLAGS = $(OPENFST_CXXFLAGS) -I$(top_srcdir)/3rdparty/utfcpp -funroll-loops -ffast-math
+phonetisaurus_g2pfst_SOURCES = src/bin/phonetisaurus-g2pfst.cc src/include/PhonetisaurusScript.h src/include/PhonetisaurusRex.h src/lib/util.cc src/include/util.h
+phonetisaurus_g2pfst_CXXFLAGS = $(OPENFST_CXXFLAGS) -I$(top_srcdir)/src/3rdparty/utfcpp -funroll-loops -ffast-math
 phonetisaurus_g2pfst_LDADD = $(OPENFST_LDFLAGS)
 
-phonetisaurus_g2prnn_SOURCES = bin/phonetisaurus-g2prnn.cc include/LegacyRnnLMHash.h include/LegacyRnnLMDecodable.h include/LegacyRnnLMReader.h include/RnnLMDecoder.h lib/util.cc include/util.h 3rdparty/rnnlm/rnnlmlib.cpp 3rdparty/rnnlm/rnnlmlib.h
-phonetisaurus_g2prnn_CXXFLAGS = $(OPENFST_CXXFLAGS) -I$(top_srcdir)/3rdparty/utfcpp -I$(top_srcdir)/3rdparty/rnnlm -funroll-loops -ffast-math
+phonetisaurus_g2prnn_SOURCES = src/bin/phonetisaurus-g2prnn.cc src/include/LegacyRnnLMHash.h src/include/LegacyRnnLMDecodable.h src/include/LegacyRnnLMReader.h src/include/RnnLMDecoder.h src/lib/util.cc src/include/util.h src/3rdparty/rnnlm/rnnlmlib.cpp src/3rdparty/rnnlm/rnnlmlib.h
+phonetisaurus_g2prnn_CXXFLAGS = $(OPENFST_CXXFLAGS) -I$(top_srcdir)/src/3rdparty/utfcpp -I$(top_srcdir)/src/3rdparty/rnnlm -funroll-loops -ffast-math
 phonetisaurus_g2prnn_LDADD = $(OPENFST_LDFLAGS)
 if OPENMP
   phonetisaurus_g2prnn_CXXFLAGS += $(OPENMP_CXXFLAGS)
   phonetisaurus_g2prnn_LDADD += $(OPENMP_LDFLAGS)
 endif
 
-rnnlm_SOURCES = bin/rnnlm.cc 3rdparty/rnnlm/rnnlmlib.cpp 3rdparty/rnnlm/rnnlmlib.h
-rnnlm_CXXFLAGS = $(OPENFST_CXXFLAGS) -I$(top_srcdir)/3rdparty/rnnlm -funroll-loops -ffast-math
+rnnlm_SOURCES = src/bin/rnnlm.cc src/3rdparty/rnnlm/rnnlmlib.cpp src/3rdparty/rnnlm/rnnlmlib.h
+rnnlm_CXXFLAGS = $(OPENFST_CXXFLAGS) -I$(top_srcdir)/src/3rdparty/rnnlm -funroll-loops -ffast-math
 rnnlm_LDADD = $(OPENFST_LDFLAGS)
 
 if HAVE_PYTHON
 
-Phonetisaurus-binding.cc: phonetisaurus-module.py
-	$(PYTHON) -B $(top_srcdir)/phonetisaurus-module.py > Phonetisaurus-binding.cc
+Phonetisaurus-binding.cc: python/phonetisaurus-module.py
+	$(PYTHON) -B $(top_srcdir)/python/phonetisaurus-module.py > Phonetisaurus-binding.cc
 
 CLEANFILES = Phonetisaurus-binding.cc
 
 if HAVE_PYTHON_DEV
 pyexec_LTLIBRARIES = Phonetisaurus.la
-nodist_Phonetisaurus_la_SOURCES = Phonetisaurus-binding.cc lib/util.cc include/util.h
-Phonetisaurus_la_CXXFLAGS = $(OPENFST_CXXFLAGS) $(PYTHON_CPPFLAGS) -I$(top_srcdir)/3rdparty/utfcpp -funroll-loops -ffast-math
+nodist_Phonetisaurus_la_SOURCES = Phonetisaurus-binding.cc src/lib/util.cc src/include/util.h
+Phonetisaurus_la_CXXFLAGS = $(OPENFST_CXXFLAGS) $(PYTHON_CPPFLAGS) -I$(top_srcdir)/src/3rdparty/utfcpp -funroll-loops -ffast-math
 Phonetisaurus_la_LIBADD = $(OPENFST_LDFLAGS) $(PYTHON_LIBS)
 Phonetisaurus_la_LDFLAGS = -avoid-version -module
 endif
