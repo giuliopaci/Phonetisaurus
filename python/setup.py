@@ -15,7 +15,7 @@ SRC_PATH = os.path.dirname(os.path.dirname(sys.argv[0]))
 
 phonetisaurusmodule = Extension(
     'Phonetisaurus',
-    include_dirs=[os.path.join(SRC_PATH,'src')],
+    include_dirs=[os.path.join(SRC_PATH,'src'), os.path.join(SRC_PATH,'src/3rdparty/utfcpp')],
     libraries=['fst', 'fstfar', 'fstscript'],
     library_dirs=[os.path.abspath('./build')],
     sources=['Phonetisaurus-binding.cc', os.path.join(SRC_PATH,'src/lib/util.cc')],
