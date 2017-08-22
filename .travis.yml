@@ -46,5 +46,5 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then sudo dpkg -i openfst_1.6.2_amd64-trusty.deb ; fi
   - if [ ! -z "$CXXCOMPILER" ]; then export CXX="$CXXCOMPILER"; fi
 script:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd src && ./configure && make -j2 && ( ./phonetisaurus-g2pfst --help || echo ) && cd .. && cp src/.libs/Phonetisaurus.so phonetisaurus && python setup.py build ; fi
-  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then cd src && ./configure && make -j2 && ./phonetisaurus-g2pfst --help && cd .. && cp src/.libs/Phonetisaurus.so phonetisaurus && python setup.py build ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; ./configure && make -j2 && ( ./phonetisaurus-g2pfst --help || echo ) ; fi
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then ./configure && make -j2 && ./phonetisaurus-g2pfst --help ; fi
