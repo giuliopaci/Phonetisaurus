@@ -95,25 +95,32 @@ rnnlm_LDADD = $(OPENFST_LDFLAGS)
 
 if HAVE_PYTHON
 
-Phonetisaurus-binding.cc: python/phonetisaurus-module.py
-	$(PYTHON) -B $(top_srcdir)/python/phonetisaurus-module.py > Phonetisaurus-binding.cc
+python/Phonetisaurus-binding.cc: $(top_srcdir)/python/phonetisaurus-module.py
+	mkdir -p python
+	$(PYTHON) -B $(top_srcdir)/python/phonetisaurus-module.py > python/Phonetisaurus-binding.cc
 
-CLEANFILES = Phonetisaurus-binding.cc
+CLEANFILES = python/Phonetisaurus-binding.cc
 
+# if HAVE_PYTHON_DEV
+# pyexec_LTLIBRARIES = Phonetisaurus.la
+# nodist_Phonetisaurus_la_SOURCES = python/Phonetisaurus-binding.cc src/lib/util.cc src/include/util.h
+# Phonetisaurus_la_CXXFLAGS = $(OPENFST_CXXFLAGS) $(PYTHON_CPPFLAGS) -I$(top_srcdir)/src/3rdparty/utfcpp -funroll-loops -ffast-math
+# Phonetisaurus_la_LIBADD = $(OPENFST_LDFLAGS) $(PYTHON_LIBS)
+# Phonetisaurus_la_LDFLAGS = -avoid-version -module
+# endif
+endif
+
+if HAVE_PYTHON
 if HAVE_PYTHON_DEV
-pyexec_LTLIBRARIES = Phonetisaurus.la
-nodist_Phonetisaurus_la_SOURCES = Phonetisaurus-binding.cc src/lib/util.cc src/include/util.h
-Phonetisaurus_la_CXXFLAGS = $(OPENFST_CXXFLAGS) $(PYTHON_CPPFLAGS) -I$(top_srcdir)/src/3rdparty/utfcpp -funroll-loops -ffast-math
-Phonetisaurus_la_LIBADD = $(OPENFST_LDFLAGS) $(PYTHON_LIBS)
-Phonetisaurus_la_LDFLAGS = -avoid-version -module
-endif
-endif
-
-all-local:
-	cd "$(srcdir)"/python; $(PYTHON) setup.py build --build-base $(abs_builddir)/python/build --verbose
+all-local: python/Phonetisaurus-binding.cc
+	cd python; $(PYTHON) ../"$(srcdir)"/python/setup.py build --build-base $(abs_builddir)/python/build --verbose
 
 install-exec-local:
-	$(PYTHON) "$(srcdir)"/python/setup.py install --prefix "$(DESTDIR)$(prefix)" --single-version-externally-managed --record "$(DESTDIR)$(pkgpythondir)"install_files.txt --verbose
+	mkdir -p "$(DESTDIR)$(pkgpythondir)"
+	cd python; $(PYTHON) ../"$(srcdir)"/python/setup.py install --prefix "$(DESTDIR)$(prefix)" --single-version-externally-managed --record "$(DESTDIR)$(pkgpythondir)"/install_files.txt --verbose
 
 uninstall-local:
-	"$(DESTDIR)$(pkgpythondir)"install_files.txt | xargs rm -f
+	cat "$(DESTDIR)$(pkgpythondir)"/install_files.txt | xargs rm -f
+	$(RM) "$(DESTDIR)$(pkgpythondir)"/install_files.txt
+endif
+endif
