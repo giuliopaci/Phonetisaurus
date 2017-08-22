@@ -1,5 +1,17 @@
 #!/usr/bin/python
-from setuptools import setup
+from setuptools import setup, Extension
+import os
+
+phonetisaurusmodule = Extension(
+    'Phonetisaurus',
+    include_dirs=['/usr/local/include', '../src'],
+    libraries=['c++'],
+    library_dirs=[os.path.abspath('./build')],
+    sources=['test.cc'],
+    language='c++',
+    extra_compile_args=['-std=c++11', '-v'],
+)
+
 
 #Install phonetisaurus 
 setup (
@@ -11,7 +23,7 @@ setup (
     author_email = 'josef.robert.novak@gmail.com',
     license      = 'BSD',
     packages     = ['phonetisaurus'],
-    package_data = {'' : ['Phonetisaurus.so']},
+    ext_modules  = [phonetisaurusmodule],
     include_package_data = True,
     install_requires = ["argparse", "bottle"],
     zip_safe     = False
